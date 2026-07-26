@@ -24,7 +24,7 @@ export default function HeroSection() {
   const visionRef = useRef<HTMLParagraphElement>(null);
   const ctaRowRef = useRef<HTMLDivElement>(null);
   const globeRef = useRef<HTMLDivElement>(null);
-  const scrollHintRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
 
   // Magnetic hover on primary CTA
   const primaryCtaRef = useMagneticHover<HTMLAnchorElement>({ strength: 0.3 });
@@ -38,7 +38,7 @@ export default function HeroSection() {
       gsap.set(
         [eyebrowLineRef.current, eyebrowTextRef.current, h1Ref.current,
          sublineRef.current, visionRef.current, ctaRowRef.current,
-         globeRef.current, scrollHintRef.current],
+         globeRef.current],
         { opacity: 1, y: 0, scaleX: 1 }
       );
       return;
@@ -47,7 +47,7 @@ export default function HeroSection() {
     // Hide everything initially
     gsap.set(
       [eyebrowTextRef.current, sublineRef.current, visionRef.current,
-       ctaRowRef.current, scrollHintRef.current],
+       ctaRowRef.current],
       { opacity: 0, y: 20 }
     );
     gsap.set(eyebrowLineRef.current, { scaleX: 0, transformOrigin: "left center" });
@@ -120,15 +120,24 @@ export default function HeroSection() {
           ease: EASE_SILK,
         }, 0.3); // starts alongside eyebrow, finishes with everything
 
-        // 8. Scroll hint
-        tl.to(scrollHintRef.current, {
-          opacity: 1,
-          y: 0,
-          duration: 0.5,
-          ease: EASE_PREMIUM,
-        }, "-=0.1");
+        // Apple-style pinned zoom-out: hero content settles, then scales
+        // down and fades as the user scrolls it away, globe holding a
+        // slight zoom — the section stays pinned for the scrub distance.
+        const scrubTl = gsap.timeline({
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "top top",
+            end: "+=70%",
+            scrub: 1,
+            pin: true,
+            pinSpacing: true,
+          },
+        });
+        scrubTl
+          .fromTo(contentRef.current, { scale: 1, opacity: 1, y: 0 }, { scale: 0.92, opacity: 0.25, y: -40, ease: "none" }, 0)
+          .fromTo(globeRef.current, { scale: 1 }, { scale: 1.08, ease: "none" }, 0);
 
-        return () => tl.kill();
+        return () => { tl.kill(); scrubTl.kill(); };
       });
 
       // Mobile — simpler, faster
@@ -142,7 +151,6 @@ export default function HeroSection() {
         );
         tl.to(eyebrowLineRef.current, { scaleX: 1, duration: 0.4 }, 0);
         tl.to(globeRef.current, { opacity: 1, scale: 1, duration: 0.8 }, 0.2);
-        tl.to(scrollHintRef.current, { opacity: 1, y: 0, duration: 0.4 }, "-=0.1");
 
         return () => tl.kill();
       });
@@ -169,21 +177,21 @@ export default function HeroSection() {
         `}</style>
       </noscript>
 
-      <div className="w-full max-w-5xl mx-auto px-6 md:px-12 h-full grid grid-cols-12 items-center gap-8">
+      <div ref={contentRef} className="w-full max-w-7xl mx-auto px-6 md:px-12 h-full grid grid-cols-12 items-center gap-8 md:gap-12">
 
         {/* Left: Typography + CTAs */}
         <div className="col-span-12 md:col-span-6 z-20 flex flex-col justify-center text-left">
 
           {/* Eyebrow */}
-          <div className="mb-5 inline-flex items-center gap-2.5">
+          <div className="mb-6 inline-flex items-center gap-3">
             <span
               ref={eyebrowLineRef}
-              className="hero-anim w-5 h-[1px] bg-stone/40 block"
+              className="hero-anim w-8 h-[1px] bg-stone/40 block"
               style={{ opacity: 1 }}
             />
             <span
               ref={eyebrowTextRef}
-              className="hero-anim font-sans text-[9px] tracking-[0.35em] uppercase text-stone font-semibold"
+              className="hero-anim font-sans text-xs md:text-sm tracking-[0.35em] uppercase text-stone font-semibold"
             >
               Research-First AI
             </span>
@@ -192,7 +200,7 @@ export default function HeroSection() {
           {/* H1 — GSAP word-split target */}
           <h1
             ref={h1Ref}
-            className="hero-anim font-serif text-[clamp(4rem,8.5vw,7rem)] font-normal leading-[1.02] tracking-tight text-carbon select-text"
+            className="hero-anim font-serif text-[clamp(4.5rem,10vw,8.5rem)] font-normal leading-[0.98] tracking-tight text-carbon select-text"
           >
             Orionac
           </h1>
@@ -200,7 +208,7 @@ export default function HeroSection() {
           {/* Sub-headline */}
           <p
             ref={sublineRef}
-            className="hero-anim mt-4 font-sans text-[clamp(1rem,1.6vw,1.2rem)] text-stone font-light leading-snug tracking-tight select-text"
+            className="hero-anim mt-6 font-sans text-[clamp(1.25rem,2vw,1.6rem)] text-stone font-light leading-snug tracking-tight select-text"
           >
             Advancing AI research.{" "}
             <br className="hidden md:block" />
@@ -210,18 +218,18 @@ export default function HeroSection() {
           {/* Vision copy */}
           <p
             ref={visionRef}
-            className="hero-anim mt-5 font-sans text-stone/60 text-sm max-w-sm leading-relaxed font-light select-text"
+            className="hero-anim mt-6 font-sans text-stone/70 text-base md:text-lg max-w-md leading-relaxed font-light select-text"
           >
             {COMPANY.vision}
           </p>
 
           {/* CTAs */}
-          <div ref={ctaRowRef} className="hero-anim mt-8 flex items-center gap-5 flex-wrap">
+          <div ref={ctaRowRef} className="hero-anim mt-10 flex items-center gap-6 flex-wrap">
             <a
               ref={primaryCtaRef}
               id="hero-primary-cta"
               href="#research"
-              className="inline-flex items-center gap-2 font-sans text-[11px] tracking-widest uppercase px-7 py-3.5 rounded-full bg-carbon text-travertine hover:bg-cosmic-blue transition-colors duration-300 font-semibold shadow-sm"
+              className="inline-flex items-center gap-2.5 font-sans text-xs md:text-sm tracking-widest uppercase px-8 py-4 rounded-full bg-carbon text-travertine hover:bg-cosmic-blue transition-colors duration-300 font-semibold shadow-md"
             >
               Explore Research
               <span>→</span>
@@ -230,7 +238,7 @@ export default function HeroSection() {
               ref={secondaryCtaRef}
               id="hero-secondary-cta"
               href="#iceberg"
-              className="inline-flex items-center gap-1.5 font-sans text-[11px] tracking-widest uppercase text-stone hover:text-carbon transition-colors duration-300 font-medium group"
+              className="inline-flex items-center gap-2 font-sans text-xs md:text-sm tracking-widest uppercase text-stone hover:text-carbon transition-colors duration-300 font-semibold group"
             >
               Discover Iceberg
               <span className="transition-transform duration-300 group-hover:translate-x-0.5">→</span>
@@ -239,26 +247,15 @@ export default function HeroSection() {
         </div>
 
         {/* Right: Globe */}
-        <div className="col-span-12 md:col-span-6 relative flex items-center justify-center z-10 w-full h-full min-h-[350px] md:min-h-auto">
+        <div className="col-span-12 md:col-span-6 relative flex items-center justify-center z-10 w-full h-full min-h-[400px] md:min-h-auto">
           <div
             ref={globeRef}
-            className="hero-anim relative w-full aspect-square max-w-[420px] md:max-w-[500px] overflow-hidden rounded-full flex items-center justify-center"
+            className="hero-anim relative w-full aspect-square max-w-[500px] md:max-w-[620px] overflow-hidden rounded-full flex items-center justify-center"
           >
             <Globe className="w-full h-full" />
           </div>
         </div>
 
-      </div>
-
-      {/* Scroll indicator */}
-      <div
-        ref={scrollHintRef}
-        className="hero-anim absolute bottom-8 left-6 md:left-12 flex items-center gap-3 text-stone/50 select-none pointer-events-none"
-      >
-        <span className="font-sans text-[9px] tracking-[0.25em] uppercase font-medium">
-          Scroll to discover
-        </span>
-        <span className="w-8 h-[1px] bg-stone/20 block" />
       </div>
     </section>
   );

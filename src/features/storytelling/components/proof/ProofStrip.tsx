@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { motion } from "motion/react";
+import { GradientMesh } from "@/components/ui/gradient-mesh";
 
 const STATS = [
   { value: "2025", label: "Founded" },
@@ -41,10 +42,12 @@ export default function ProofStrip() {
   return (
     <div
       ref={ref}
-      className="w-full bg-silk border-y border-carbon/5 overflow-hidden"
+      className="relative w-full bg-silk border-y border-carbon/5 overflow-hidden"
     >
+      <GradientMesh variant="spectrum" className="opacity-40" />
+
       {/* Stat Row */}
-      <div className="w-full max-w-5xl mx-auto px-6 md:px-12 py-10 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-8">
+      <div className="relative z-10 w-full max-w-5xl mx-auto px-6 md:px-12 py-10 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-8">
         {STATS.map((stat, i) => (
           <motion.div
             key={stat.label}

@@ -4,6 +4,16 @@ import { useRef } from "react";
 import { COMPANY } from "@/core/context";
 import { useGsapReveal } from "@/hooks/useGsapReveal";
 import { gsap, EASE_PREMIUM, revealFromBelow } from "@/lib/gsap";
+import { GradientMesh } from "@/components/ui/gradient-mesh";
+
+// Bento sizing per card index — first item is a featured 2x2 tile,
+// second is a wide 2x1 tile, remaining two fill the row beneath it.
+const BENTO_SPAN = [
+  "sm:col-span-2 lg:row-span-2 min-h-[220px] sm:min-h-[460px] lg:min-h-0",
+  "lg:col-span-2 min-h-[220px]",
+  "min-h-[220px]",
+  "min-h-[220px]",
+];
 
 const CARD_ACCENTS = [
   "hover:border-[#B187F9]/40 hover:shadow-[0_0_40px_rgba(177,135,249,0.08)]",
@@ -76,9 +86,11 @@ export default function MissionGrid() {
     <section
       id="mission"
       ref={sectionRef}
-      className="w-full bg-travertine py-24 px-6 md:px-12"
+      className="relative w-full bg-travertine py-24 px-6 md:px-12 overflow-hidden"
     >
-      <div className="w-full max-w-5xl mx-auto">
+      <GradientMesh variant="warm" className="opacity-20" />
+
+      <div className="relative w-full max-w-5xl mx-auto">
 
         {/* Section header */}
         <div ref={headerRef} className="flex flex-col gap-4 mb-14 text-left">
@@ -93,12 +105,12 @@ export default function MissionGrid() {
           </h2>
         </div>
 
-        {/* 4-card grid */}
-        <div ref={cardsRef} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {/* Bento grid — featured 2x2 tile + wide tile + two fillers */}
+        <div ref={cardsRef} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 lg:grid-rows-2 gap-4">
           {COMPANY.mission.map((item, i) => (
             <div
               key={item.verb}
-              className={`mission-card group relative flex flex-col justify-between bg-silk border border-carbon/5 rounded-2xl p-8 min-h-[220px] transition-all duration-500 cursor-default ${CARD_ACCENTS[i]}`}
+              className={`mission-card group relative flex flex-col justify-between bg-silk border border-carbon/5 rounded-2xl p-8 transition-all duration-500 cursor-default ${BENTO_SPAN[i]} ${CARD_ACCENTS[i]}`}
             >
               {/* Card number */}
               <span className="font-sans text-[9px] tracking-[0.3em] uppercase text-stone/30 font-semibold">
@@ -107,10 +119,10 @@ export default function MissionGrid() {
 
               {/* Verb */}
               <div className="mt-auto">
-                <h3 className="mission-verb font-serif text-[clamp(1.75rem,3.5vw,2.25rem)] font-normal text-carbon leading-none tracking-tight group-hover:-translate-y-0.5 transition-transform duration-300">
+                <h3 className={`mission-verb font-serif font-normal text-carbon leading-none tracking-tight group-hover:-translate-y-0.5 transition-transform duration-300 ${i === 0 ? "text-[clamp(2.25rem,4.5vw,3.25rem)]" : "text-[clamp(1.75rem,3.5vw,2.25rem)]"}`}>
                   {item.verb}
                 </h3>
-                <p className="mt-3 font-sans text-xs text-stone leading-relaxed font-light max-w-[180px]">
+                <p className="mt-3 font-sans text-xs text-stone leading-relaxed font-light max-w-[280px]">
                   {item.description}
                 </p>
               </div>

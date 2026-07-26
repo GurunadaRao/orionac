@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import { RESEARCH, ICEBERG } from "@/core/context";
 import { BorderBeam } from "@/components/ui/border-beam";
+import { GradientMesh } from "@/components/ui/gradient-mesh";
 import { useGsapReveal } from "@/hooks/useGsapReveal";
 import { gsap, EASE_PREMIUM, EASE_SILK, revealFromBelow, lineReveal } from "@/lib/gsap";
 
@@ -185,10 +186,12 @@ export default function DualPillars() {
     <section
       id="research"
       ref={ref}
-      className="w-full bg-travertine py-28 px-6 md:px-12"
+      className="relative w-full bg-travertine py-28 px-6 md:px-12 overflow-hidden"
     >
+      <GradientMesh variant="cool" className="opacity-25 h-[70%]" />
+
       {/* ── Section header ── */}
-      <div className="w-full max-w-5xl mx-auto mb-16">
+      <div className="relative z-10 w-full max-w-5xl mx-auto mb-16">
         <div ref={sectionLabelRef} className="flex items-center gap-3 mb-5">
           <span className="w-6 h-[1px] bg-stone/30 block" />
           <span className="font-sans text-[9px] tracking-[0.35em] uppercase text-stone font-semibold">

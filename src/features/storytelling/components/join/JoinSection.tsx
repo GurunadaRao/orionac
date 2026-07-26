@@ -163,6 +163,7 @@ export default function JoinSection() {
                   id="join-email"
                   type="email"
                   required
+                  suppressHydrationWarning
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="you@institution.edu"
@@ -182,6 +183,7 @@ export default function JoinSection() {
                 ref={submitBtnRef}
                 id="join-subscribe-btn"
                 type="submit"
+                suppressHydrationWarning
                 className="mt-2 inline-flex items-center justify-center gap-2 font-sans text-[11px] tracking-widest uppercase px-7 py-3.5 rounded-full bg-carbon text-travertine hover:bg-cosmic-blue transition-all duration-300 font-semibold w-fit"
               >
                 Subscribe to research

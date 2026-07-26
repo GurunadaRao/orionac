@@ -153,15 +153,17 @@ export function splitWordReveal(
   } = options;
 
   // Split text into word spans wrapped in clip containers
-  const originalHTML = element.innerHTML;
-  const words = originalHTML.split(/(\s+)/);
+  if (!element.querySelector(".gsap-word-inner")) {
+    const originalHTML = element.innerHTML;
+    const words = originalHTML.split(/(\s+)/);
 
-  element.innerHTML = words
-    .map((word) => {
-      if (/^\s+$/.test(word)) return word;
-      return `<span class="gsap-word-outer" style="display:inline-block;overflow:hidden;vertical-align:bottom;"><span class="gsap-word-inner" style="display:inline-block;">${word}</span></span>`;
-    })
-    .join("");
+    element.innerHTML = words
+      .map((word) => {
+        if (/^\s+$/.test(word)) return word;
+        return `<span class="gsap-word-outer" style="display:inline-block;overflow:hidden;vertical-align:bottom;"><span class="gsap-word-inner" style="display:inline-block;">${word}</span></span>`;
+      })
+      .join("");
+  }
 
   const inners = element.querySelectorAll<HTMLElement>(".gsap-word-inner");
 

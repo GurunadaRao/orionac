@@ -20,6 +20,7 @@ export default function MirageSpotlight() {
   const descRef = useRef<HTMLParagraphElement>(null);
   const ctaRef = useRef<HTMLDivElement>(null);
   const glowRef = useRef<HTMLDivElement>(null);
+  const statsRef = useRef<HTMLDivElement>(null);
 
   const { ref: sectionRef } = useGsapReveal<HTMLElement>(
     (el) => {
@@ -29,43 +30,39 @@ export default function MirageSpotlight() {
       mm.add("(min-width: 768px)", () => {
         const st = { trigger: el, start: "top 72%", once: true };
 
-        // Set initial hidden states
-        gsap.set(
-          [badgeRef.current, eyebrowRef.current, typeRef.current,
-           descRef.current, ctaRef.current],
-          { opacity: 0, y: 28 }
-        );
-        gsap.set(glowRef.current, { scale: 0.5, opacity: 0 });
-        gsap.set(titleRef.current, { opacity: 0 });
+        const targets = [
+          eyebrowRef.current,
+          typeRef.current,
+          descRef.current,
+          ctaRef.current,
+          statsRef.current,
+        ].filter(Boolean);
 
-        // Master timeline (scroll-triggered, no pinning)
+        if (targets.length > 0) {
+          gsap.set(targets, { opacity: 0, y: 32 });
+        }
+        if (glowRef.current) gsap.set(glowRef.current, { opacity: 0 });
+        if (titleRef.current) gsap.set(titleRef.current, { opacity: 0 });
+
         const tl = gsap.timeline({ scrollTrigger: st });
 
-        // Glow blooms first
-        tl.to(glowRef.current, {
-          scale: 1,
-          opacity: 1,
-          duration: 1.6,
-          ease: EASE_SILK,
-        }, 0);
+        if (glowRef.current) {
+          tl.to(glowRef.current, {
+            opacity: 1,
+            duration: 1.8,
+            ease: EASE_SILK,
+          }, 0);
+        }
 
-        // Badge slides in
-        tl.to(badgeRef.current, {
-          opacity: 1,
-          y: 0,
-          duration: 0.6,
-          ease: EASE_PREMIUM,
-        }, 0.1);
+        if (eyebrowRef.current) {
+          tl.to(eyebrowRef.current, {
+            opacity: 1,
+            y: 0,
+            duration: 0.55,
+            ease: EASE_PREMIUM,
+          }, 0.2);
+        }
 
-        // Eyebrow
-        tl.to(eyebrowRef.current, {
-          opacity: 1,
-          y: 0,
-          duration: 0.55,
-          ease: EASE_PREMIUM,
-        }, 0.25);
-
-        // "Mirage E-1.0" — word-split reveal
         tl.add(() => {
           if (!titleRef.current) return;
           gsap.set(titleRef.current, { opacity: 1 });
@@ -75,55 +72,93 @@ export default function MirageSpotlight() {
             y: 60,
             ease: EASE_SILK,
           });
-        }, 0.4);
+        }, 0.35);
 
-        // Type label
-        tl.to(typeRef.current, {
-          opacity: 1,
-          y: 0,
-          duration: 0.5,
-          ease: EASE_PREMIUM,
-        }, 0.85);
+        if (typeRef.current) {
+          tl.to(typeRef.current, {
+            opacity: 1,
+            y: 0,
+            duration: 0.5,
+            ease: EASE_PREMIUM,
+          }, 0.75);
+        }
 
-        // Description
-        tl.to(descRef.current, {
-          opacity: 1,
-          y: 0,
-          duration: 0.6,
-          ease: EASE_PREMIUM,
-        }, 1.0);
+        if (descRef.current) {
+          tl.to(descRef.current, {
+            opacity: 1,
+            y: 0,
+            duration: 0.6,
+            ease: EASE_PREMIUM,
+          }, 0.9);
+        }
 
-        // CTAs
-        tl.to(ctaRef.current, {
-          opacity: 1,
-          y: 0,
-          duration: 0.55,
-          ease: EASE_PREMIUM,
-        }, 1.15);
+        if (statsRef.current) {
+          tl.to(statsRef.current, {
+            opacity: 1,
+            y: 0,
+            duration: 0.7,
+            ease: EASE_PREMIUM,
+          }, 1.05);
+        }
 
-        return () => tl.kill();
+        if (ctaRef.current) {
+          tl.to(ctaRef.current, {
+            opacity: 1,
+            y: 0,
+            duration: 0.6,
+            ease: EASE_PREMIUM,
+          }, 1.2);
+        }
+
+        const scrubTl = gsap.timeline({
+          scrollTrigger: {
+            trigger: el,
+            start: "top bottom",
+            end: "bottom top",
+            scrub: 1,
+          },
+        });
+        if (glowRef.current) {
+          scrubTl.fromTo(
+            glowRef.current,
+            { scale: 0.8, y: -60 },
+            { scale: 1.3, y: 60, ease: "none" }
+          );
+        }
+
+        return () => { tl.kill(); scrubTl.kill(); };
       });
 
       // ── Mobile ────────────────────────────────────────────────────────────
       mm.add("(max-width: 767px)", () => {
-        gsap.set(
-          [badgeRef.current, eyebrowRef.current, titleRef.current,
-           typeRef.current, descRef.current, ctaRef.current],
-          { opacity: 0, y: 20 }
-        );
-        gsap.set(glowRef.current, { scale: 0.6, opacity: 0 });
+        const targets = [
+          eyebrowRef.current,
+          titleRef.current,
+          typeRef.current,
+          descRef.current,
+          statsRef.current,
+          ctaRef.current,
+        ].filter(Boolean);
+
+        if (targets.length > 0) {
+          gsap.set(targets, { opacity: 0, y: 24 });
+        }
+        if (glowRef.current) gsap.set(glowRef.current, { scale: 0.6, opacity: 0 });
 
         const tl = gsap.timeline({
           scrollTrigger: { trigger: el, start: "top 80%", once: true },
         });
 
-        tl.to(glowRef.current, { scale: 1, opacity: 1, duration: 1.0, ease: EASE_SILK }, 0);
-        tl.to(
-          [badgeRef.current, eyebrowRef.current, titleRef.current,
-           typeRef.current, descRef.current, ctaRef.current],
-          { opacity: 1, y: 0, duration: 0.6, ease: EASE_PREMIUM, stagger: 0.07 },
-          0.1
-        );
+        if (glowRef.current) {
+          tl.to(glowRef.current, { scale: 1, opacity: 1, duration: 1.0, ease: EASE_SILK }, 0);
+        }
+        if (targets.length > 0) {
+          tl.to(
+            targets,
+            { opacity: 1, y: 0, duration: 0.6, ease: EASE_PREMIUM, stagger: 0.07 },
+            0.1
+          );
+        }
 
         return () => tl.kill();
       });
@@ -139,97 +174,133 @@ export default function MirageSpotlight() {
     <section
       id="mirage"
       ref={sectionRef}
-      className="relative w-full bg-carbon overflow-hidden py-32 px-6 md:px-12"
+      className="relative w-full bg-carbon overflow-hidden py-36 px-6 md:px-12 select-none"
     >
-      {/* Glyph matrix */}
+      {/* Dynamic Background Matrix */}
       <div className="absolute inset-0 z-0 pointer-events-none">
         <GlyphMatrix
           color="#FAF9F6"
-          cellSize={16}
-          mutationRate={0.025}
-          interval={120}
-          fadeBottom={0.75}
-          className="w-full h-full opacity-[0.06]"
+          cellSize={14}
+          mutationRate={0.03}
+          interval={100}
+          fadeBottom={0.8}
+          className="w-full h-full opacity-[0.07]"
         />
       </div>
 
-      {/* Animated radial glow */}
+      {/* Ambient Multi-layer Aura Glow */}
       <div
         ref={glowRef}
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[500px] rounded-full blur-[120px] pointer-events-none z-0"
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[850px] h-[580px] rounded-full blur-[140px] pointer-events-none z-0 opacity-80"
         style={{
           background:
-            "radial-gradient(ellipse, rgba(177,135,249,0.20) 0%, rgba(46,91,255,0.10) 50%, transparent 100%)",
+            "radial-gradient(ellipse at center, rgba(177,135,249,0.28) 0%, rgba(46,91,255,0.15) 45%, rgba(13,13,13,0) 80%)",
         }}
       />
 
-      <div className="relative z-10 w-full max-w-5xl mx-auto flex flex-col items-start gap-8">
+      <div className="relative z-10 w-full max-w-7xl mx-auto grid grid-cols-12 gap-8 items-center">
+        
+        {/* Left Column: Model Spec & Vision */}
+        <div className="col-span-12 lg:col-span-7 flex flex-col items-start gap-8">
 
-        {/* Status badge */}
-        <div
-          ref={badgeRef}
-          className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full border border-travertine/10 bg-travertine/5"
-        >
-          <span className="relative flex h-2 w-2">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#B187F9] opacity-75" />
-            <span className="relative inline-flex rounded-full h-2 w-2 bg-[#B187F9]" />
-          </span>
-          <span className="font-sans text-[9px] tracking-[0.3em] uppercase text-travertine/50 font-semibold">
-            {release.status}
-          </span>
+          {/* Heading Block */}
+          <div className="flex flex-col gap-3">
+            <span
+              ref={eyebrowRef}
+              className="block font-sans text-xs tracking-[0.35em] uppercase text-[#B187F9] font-bold"
+            >
+              Flagship Architecture
+            </span>
+
+            <h2
+              ref={titleRef}
+              className="font-serif text-[clamp(5rem,12vw,10.5rem)] font-normal leading-[0.92] tracking-tight text-travertine select-text"
+            >
+              {release.name}
+            </h2>
+
+            <span
+              ref={typeRef}
+              className="font-sans text-xs md:text-sm tracking-[0.3em] uppercase text-travertine/60 font-semibold"
+            >
+              {release.type} · Sparse Dynamic Routing
+            </span>
+          </div>
+
+          {/* Core Description */}
+          <p
+            ref={descRef}
+            className="font-sans text-base md:text-lg text-travertine/70 max-w-xl leading-relaxed font-light select-text"
+          >
+            {release.significance}
+          </p>
+
+          {/* Action CTAs */}
+          <div ref={ctaRef} className="flex items-center gap-6 flex-wrap pt-2">
+            <a
+              id="mirage-waitlist-cta"
+              href="#join"
+              className="inline-flex items-center gap-3 font-sans text-xs md:text-sm tracking-widest uppercase px-8 py-4 rounded-full bg-travertine text-carbon hover:bg-[#B187F9] hover:text-white transition-all duration-300 font-bold shadow-lg hover:shadow-[#B187F9]/30"
+            >
+              Join the waitlist
+              <span className="text-base">→</span>
+            </a>
+            <a
+              id="mirage-research-link"
+              href="/research/mirage"
+              className="inline-flex items-center gap-2 font-sans text-xs md:text-sm tracking-widest uppercase text-travertine/50 hover:text-travertine transition-colors duration-300 font-semibold group border-b border-travertine/10 pb-0.5 hover:border-travertine"
+            >
+              Read Architecture Paper
+              <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>
+            </a>
+          </div>
         </div>
 
-        {/* Editorial typemark */}
-        <div className="flex flex-col gap-2">
-          <span
-            ref={eyebrowRef}
-            className="block font-sans text-[9px] tracking-[0.35em] uppercase text-travertine/30 font-semibold"
-          >
-            Upcoming Release
-          </span>
+        {/* Right Column: Spec Cards & Interactive Orb */}
+        <div ref={statsRef} className="col-span-12 lg:col-span-5 grid grid-cols-2 gap-4 mt-6 lg:mt-0">
+          
+          {/* Card 1: Efficiency */}
+          <div className="col-span-1 p-6 rounded-2xl border border-travertine/10 bg-travertine/[0.03] backdrop-blur-xl flex flex-col justify-between h-40 hover:border-[#B187F9]/40 transition-colors group">
+            <span className="text-xs font-sans tracking-widest text-travertine/40 uppercase font-semibold">
+              Latency Target
+            </span>
+            <div>
+              <div className="text-3xl md:text-4xl font-serif text-travertine group-hover:text-[#B187F9] transition-colors">
+                &lt; 14ms
+              </div>
+              <p className="text-xs text-travertine/50 font-sans mt-1">Real-time local inference</p>
+            </div>
+          </div>
 
-          {/* GSAP word-split target */}
-          <h2
-            ref={titleRef}
-            className="font-serif text-[clamp(3.5rem,10vw,8rem)] font-normal leading-[0.95] tracking-tight text-travertine"
-          >
-            {release.name}
-          </h2>
+          {/* Card 2: Memory */}
+          <div className="col-span-1 p-6 rounded-2xl border border-travertine/10 bg-travertine/[0.03] backdrop-blur-xl flex flex-col justify-between h-40 hover:border-[#B187F9]/40 transition-colors group">
+            <span className="text-xs font-sans tracking-widest text-travertine/40 uppercase font-semibold">
+              VRAM Footprint
+            </span>
+            <div>
+              <div className="text-3xl md:text-4xl font-serif text-travertine group-hover:text-[#B187F9] transition-colors">
+                4.2 GB
+              </div>
+              <p className="text-xs text-travertine/50 font-sans mt-1">Quantized INT4 weights</p>
+            </div>
+          </div>
 
-          <span
-            ref={typeRef}
-            className="font-sans text-[10px] tracking-[0.25em] uppercase text-[#B187F9] font-semibold"
-          >
-            {release.type}
-          </span>
-        </div>
+          {/* Card 3: Wide Highlight Card */}
+          <div className="col-span-2 p-6 rounded-2xl border border-travertine/10 bg-gradient-to-r from-travertine/[0.05] via-travertine/[0.02] to-transparent backdrop-blur-xl flex flex-col justify-between hover:border-[#B187F9]/40 transition-colors group relative overflow-hidden">
+            <div className="absolute -right-10 -bottom-10 w-32 h-32 rounded-full bg-[#B187F9]/10 blur-2xl group-hover:bg-[#B187F9]/20 transition-colors" />
+            <span className="text-xs font-sans tracking-widest text-[#B187F9] uppercase font-bold">
+              Core Benchmark Breakthrough
+            </span>
+            <div className="mt-3">
+              <div className="text-2xl md:text-3xl font-serif text-travertine">
+                3.8× Efficiency Ratio
+              </div>
+              <p className="text-xs md:text-sm text-travertine/60 font-sans mt-1 leading-relaxed">
+                Outperforms standard dense transformers while consuming a fraction of compute overhead.
+              </p>
+            </div>
+          </div>
 
-        {/* Description */}
-        <p
-          ref={descRef}
-          className="font-sans text-sm md:text-base text-travertine/50 max-w-lg leading-relaxed font-light"
-        >
-          {release.significance}
-        </p>
-
-        {/* CTAs */}
-        <div ref={ctaRef} className="flex items-center gap-5">
-          <a
-            id="mirage-waitlist-cta"
-            href="#join"
-            className="inline-flex items-center gap-2 font-sans text-[11px] tracking-widest uppercase px-7 py-3.5 rounded-full bg-travertine text-carbon hover:bg-[#B187F9] hover:text-white transition-all duration-300 font-semibold"
-          >
-            Join the waitlist
-            <span>→</span>
-          </a>
-          <a
-            id="mirage-research-link"
-            href="/research/mirage"
-            className="inline-flex items-center gap-1.5 font-sans text-[11px] tracking-widest uppercase text-travertine/30 hover:text-travertine transition-colors duration-300 font-medium group"
-          >
-            Learn more
-            <span className="transition-transform duration-300 group-hover:translate-x-0.5">→</span>
-          </a>
         </div>
 
       </div>

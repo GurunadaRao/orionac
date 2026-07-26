@@ -94,11 +94,13 @@ export default function Footer() {
               <input 
                 type="email" 
                 required 
+                suppressHydrationWarning
                 placeholder="Enter your email address" 
                 className="font-sans text-xs bg-carbon/5 border border-carbon/10 rounded-full px-5 py-3 text-carbon flex-grow focus:outline-none focus:border-cosmic-blue transition-colors placeholder:text-stone/40 w-full"
               />
               <button 
                 type="submit"
+                suppressHydrationWarning
                 className="font-sans text-[10px] tracking-widest uppercase px-6 py-3 rounded-full bg-carbon text-travertine hover:bg-cosmic-blue hover:text-white transition-all duration-300 font-semibold cursor-pointer whitespace-nowrap"
               >
                 Subscribe
@@ -167,6 +169,7 @@ export default function Footer() {
             </a>
             <button
               onClick={handleScrollToTop}
+              suppressHydrationWarning
               className="font-sans text-[10px] md:text-xs tracking-widest uppercase text-stone hover:text-cosmic-blue hover:underline cursor-pointer transition-all duration-300 font-semibold"
               aria-label="Scroll back to top of the page"
             >

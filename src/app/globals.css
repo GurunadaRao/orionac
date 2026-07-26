@@ -299,3 +299,26 @@ html.lenis, html.lenis body {
 .animate-marquee:hover {
   animation-play-state: paused;
 }
+
+/* Gradient mesh drift — slow, organic blob movement (Mistral-style aurora) */
+@keyframes mesh-drift-a {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(4%, 6%) scale(1.08); }
+}
+@keyframes mesh-drift-b {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(-6%, 4%) scale(1.1); }
+}
+@keyframes mesh-drift-c {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(3%, -5%) scale(1.06); }
+}
+.animate-mesh-drift-a { animation: mesh-drift-a 18s ease-in-out infinite; }
+.animate-mesh-drift-b { animation: mesh-drift-b 22s ease-in-out infinite; }
+.animate-mesh-drift-c { animation: mesh-drift-c 26s ease-in-out infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-mesh-drift-a, .animate-mesh-drift-b, .animate-mesh-drift-c {
+    animation: none;
+  }
+}
