@@ -15,6 +15,7 @@
   --color-gold: #C2A27C;
   --color-stone: #707070;
   --color-cosmic-blue: #2E5BFF;
+  --color-violet: #B187F9;
 
   --font-serif: 'Product Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-sans: 'Product Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -63,6 +64,7 @@
   --color-gold: var(--color-gold);
   --color-stone: var(--color-stone);
   --color-cosmic-blue: var(--color-cosmic-blue);
+  --color-violet: var(--color-violet);
 
   --font-serif: var(--font-serif);
   --font-sans: var(--font-sans);

@@ -2,7 +2,7 @@
 
 import { useRef } from "react";
 import { GlyphMatrix } from "@/components/ui/glyph-matrix";
-import { RESEARCH } from "@/core/context";
+import { RESEARCH, MIRAGE } from "@/core/context";
 import { useGsapReveal } from "@/hooks/useGsapReveal";
 import {
   gsap,
@@ -207,7 +207,7 @@ export default function MirageSpotlight() {
           <div className="flex flex-col gap-3">
             <span
               ref={eyebrowRef}
-              className="block font-sans text-xs tracking-[0.35em] uppercase text-[#B187F9] font-bold"
+              className="block font-sans text-xs tracking-[0.35em] uppercase text-violet font-bold"
             >
               Flagship Architecture
             </span>
@@ -240,7 +240,7 @@ export default function MirageSpotlight() {
             <a
               id="mirage-waitlist-cta"
               href="#join"
-              className="inline-flex items-center gap-3 font-sans text-xs md:text-sm tracking-widest uppercase px-8 py-4 rounded-full bg-travertine text-carbon hover:bg-[#B187F9] hover:text-white transition-all duration-300 font-bold shadow-lg hover:shadow-[#B187F9]/30"
+              className="inline-flex items-center gap-3 font-sans text-xs md:text-sm tracking-widest uppercase px-8 py-4 rounded-full bg-travertine text-carbon hover:bg-violet hover:text-white transition-all duration-300 font-bold shadow-lg hover:shadow-violet/30"
             >
               Join the waitlist
               <span className="text-base">→</span>
@@ -258,45 +258,37 @@ export default function MirageSpotlight() {
 
         {/* Right Column: Spec Cards & Interactive Orb */}
         <div ref={statsRef} className="col-span-12 lg:col-span-5 grid grid-cols-2 gap-4 mt-6 lg:mt-0">
-          
-          {/* Card 1: Efficiency */}
-          <div className="col-span-1 p-6 rounded-2xl border border-travertine/10 bg-travertine/[0.03] backdrop-blur-xl flex flex-col justify-between h-40 hover:border-[#B187F9]/40 transition-colors group">
-            <span className="text-xs font-sans tracking-widest text-travertine/40 uppercase font-semibold">
-              Latency Target
-            </span>
-            <div>
-              <div className="text-3xl md:text-4xl font-serif text-travertine group-hover:text-[#B187F9] transition-colors">
-                &lt; 14ms
-              </div>
-              <p className="text-xs text-travertine/50 font-sans mt-1">Real-time local inference</p>
-            </div>
-          </div>
 
-          {/* Card 2: Memory */}
-          <div className="col-span-1 p-6 rounded-2xl border border-travertine/10 bg-travertine/[0.03] backdrop-blur-xl flex flex-col justify-between h-40 hover:border-[#B187F9]/40 transition-colors group">
-            <span className="text-xs font-sans tracking-widest text-travertine/40 uppercase font-semibold">
-              VRAM Footprint
-            </span>
-            <div>
-              <div className="text-3xl md:text-4xl font-serif text-travertine group-hover:text-[#B187F9] transition-colors">
-                4.2 GB
+          {/* Card 1 & 2: first two metrics */}
+          {MIRAGE.metrics.slice(0, 2).map((m) => (
+            <div
+              key={m.label}
+              className="col-span-1 p-6 rounded-2xl border border-travertine/10 bg-travertine/[0.03] backdrop-blur-xl flex flex-col justify-between h-40 hover:border-violet/40 transition-colors group"
+            >
+              <span className="text-xs font-sans tracking-widest text-travertine/40 uppercase font-semibold">
+                {m.label}
+              </span>
+              <div>
+                <div className="text-3xl md:text-4xl font-serif text-travertine group-hover:text-violet transition-colors">
+                  {m.value}
+                </div>
+                <p className="text-xs text-travertine/50 font-sans mt-1">{m.detail}</p>
               </div>
-              <p className="text-xs text-travertine/50 font-sans mt-1">Quantized INT4 weights</p>
             </div>
-          </div>
+          ))}
 
-          {/* Card 3: Wide Highlight Card */}
-          <div className="col-span-2 p-6 rounded-2xl border border-travertine/10 bg-gradient-to-r from-travertine/[0.05] via-travertine/[0.02] to-transparent backdrop-blur-xl flex flex-col justify-between hover:border-[#B187F9]/40 transition-colors group relative overflow-hidden">
-            <div className="absolute -right-10 -bottom-10 w-32 h-32 rounded-full bg-[#B187F9]/10 blur-2xl group-hover:bg-[#B187F9]/20 transition-colors" />
-            <span className="text-xs font-sans tracking-widest text-[#B187F9] uppercase font-bold">
+          {/* Card 3: Wide Highlight Card — third metric (Efficiency Ratio) */}
+          <div className="col-span-2 p-6 rounded-2xl border border-travertine/10 bg-gradient-to-r from-travertine/[0.05] via-travertine/[0.02] to-transparent backdrop-blur-xl flex flex-col justify-between hover:border-violet/40 transition-colors group relative overflow-hidden">
+            <div className="absolute -right-10 -bottom-10 w-32 h-32 rounded-full bg-violet/10 blur-2xl group-hover:bg-violet/20 transition-colors" />
+            <span className="text-xs font-sans tracking-widest text-violet uppercase font-bold">
               Core Benchmark Breakthrough
             </span>
             <div className="mt-3">
               <div className="text-2xl md:text-3xl font-serif text-travertine">
-                3.8× Efficiency Ratio
+                {MIRAGE.metrics[2].value} {MIRAGE.metrics[2].label}
               </div>
               <p className="text-xs md:text-sm text-travertine/60 font-sans mt-1 leading-relaxed">
-                Outperforms standard dense transformers while consuming a fraction of compute overhead.
+                {MIRAGE.metrics[2].detail}
               </p>
             </div>
           </div>

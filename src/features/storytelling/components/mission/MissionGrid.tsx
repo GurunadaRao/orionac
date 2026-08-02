@@ -16,7 +16,7 @@ const BENTO_SPAN = [
 ];
 
 const CARD_ACCENTS = [
-  "hover:border-[#B187F9]/40 hover:shadow-[0_0_40px_rgba(177,135,249,0.08)]",
+  "hover:border-violet/40 hover:shadow-[0_0_40px_rgba(177,135,249,0.08)]",
   "hover:border-gold/40 hover:shadow-[0_0_40px_rgba(194,162,124,0.08)]",
   "hover:border-stone/30 hover:shadow-[0_0_40px_rgba(112,112,112,0.06)]",
   "hover:border-cosmic-blue/30 hover:shadow-[0_0_40px_rgba(46,91,255,0.06)]",

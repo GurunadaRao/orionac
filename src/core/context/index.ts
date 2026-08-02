@@ -12,8 +12,8 @@ export type { Brand } from "./brand.context";
 export { COMPANY } from "./company.context";
 export type { Company } from "./company.context";
 
-export { RESEARCH } from "./research.context";
-export type { Research } from "./research.context";
+export { RESEARCH, MIRAGE } from "./research.context";
+export type { Research, Mirage } from "./research.context";
 
 export { ICEBERG } from "./iceberg.context";
 export type { Iceberg } from "./iceberg.context";
